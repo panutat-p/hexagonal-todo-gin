@@ -4,18 +4,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/panutat-p/hexagonal-todo-gin/todo"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
-	"os/user"
 )
-
-type User struct {
-	gorm.Model
-	Name string `json:"name"`
-}
 
 func main() {
 	err := godotenv.Load()
@@ -28,23 +23,23 @@ func main() {
 	if err != nil {
 		panic("Failed to connect ElephantSQL")
 	}
-	fmt.Println("Connected to ElephantSQL")
+	fmt.Println("🟩 Connected to ElephantSQL")
 
-	err = db.AutoMigrate(&user.User{})
+	err = db.AutoMigrate(&todo.Todo{})
 	if err != nil {
 		panic("Failed to migrate ElephantSQL")
 	}
 
-	//todoHandler := todo.NewHandler(todo.NewGormStore(db))
+	todoHandler := todo.NewHandler(todo.NewGormStore(db))
 
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "healthy",
+			"status": "healthy",
 		})
 	})
 
-	//r.POST("/todo/new", todoHandler.NewTask)
+	r.POST("/todo/new", todo.NewGinHandler(todoHandler.CreateNewTask)) // convert AdapterHandler to GinHandler
 
 	err = r.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))) // block
 	if err != nil {
