@@ -1,5 +1,7 @@
 # hexagonal-todo-gin
 
+https://medium.com/@matiasvarela/hexagonal-architecture-in-go-cfd4e436faa3
+
 https://github.com/pallat/todohexagonal
 
 ```shell
