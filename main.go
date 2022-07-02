@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/panutat-p/hexagonal-todo-gin/todo"
+	"github.com/panutat-p/hexagonal-todo-gin/todo/adapters"
+	"github.com/panutat-p/hexagonal-todo-gin/todo/domain"
+	"github.com/panutat-p/hexagonal-todo-gin/todo/services"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -25,12 +27,12 @@ func main() {
 	}
 	fmt.Println("🟩 Connected to ElephantSQL")
 
-	err = db.AutoMigrate(&todo.Todo{})
+	err = db.AutoMigrate(&domain.Todo{})
 	if err != nil {
 		panic("Failed to migrate ElephantSQL")
 	}
 
-	todoHandler := todo.NewHandler(todo.NewGormStore(db))
+	todoHandler := services.NewHandler(adapters.NewGormStore(db))
 
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
@@ -39,7 +41,7 @@ func main() {
 		})
 	})
 
-	r.POST("/todo/new", todo.NewGinHandler(todoHandler.CreateNewTask)) // convert AdapterHandler to GinHandler
+	r.POST("/todo/new", adapters.NewGinHandler(todoHandler.CreateNewTask)) // convert AdapterHandler to GinHandler
 
 	err = r.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))) // block
 	if err != nil {

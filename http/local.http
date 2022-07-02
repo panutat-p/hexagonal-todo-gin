@@ -4,6 +4,6 @@ POST http://localhost:3000/todo/new
 Content-Type: application/json
 
 {
-  "title": "buy milk"
+  "title": "buy cheese"
 }
 ###

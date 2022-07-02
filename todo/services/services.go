@@ -1,21 +1,22 @@
-package todo
+package services
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/panutat-p/hexagonal-todo-gin/todo/domain"
+	"github.com/panutat-p/hexagonal-todo-gin/todo/ports"
 	"net/http"
 )
 
 type Handler struct {
-	store Storer
+	store ports.Storer
 }
 
-func NewHandler(store Storer) *Handler {
+func NewHandler(store ports.Storer) *Handler {
 	return &Handler{
 		store: store,
 	}
 }
 
-// Context adapter spec for API
 type Context interface {
 	Bind(interface{}) error
 	Json(int, interface{})
@@ -23,14 +24,8 @@ type Context interface {
 	Audience() string
 }
 
-// Storer adapter spec for SPI
-type Storer interface {
-	Create(*Todo) error
-	Query(*Todo) error
-}
-
 func (h *Handler) CreateNewTask(c Context) {
-	var todo Todo
+	var todo domain.Todo
 	if err := c.Bind(&todo); err != nil {
 		c.Json(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
