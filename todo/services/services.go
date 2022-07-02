@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/panutat-p/hexagonal-todo-gin/todo/domain"
 	"github.com/panutat-p/hexagonal-todo-gin/todo/ports"
 	"net/http"
@@ -27,7 +26,7 @@ type Context interface {
 func (h *Handler) CreateNewTask(c Context) {
 	var todo domain.Todo
 	if err := c.Bind(&todo); err != nil {
-		c.Json(http.StatusBadRequest, gin.H{
+		c.Json(http.StatusBadRequest, map[string]interface{}{
 			"error": err.Error(),
 		})
 		return
@@ -35,13 +34,13 @@ func (h *Handler) CreateNewTask(c Context) {
 
 	err := h.store.Create(&todo)
 	if err != nil {
-		c.Json(http.StatusBadRequest, gin.H{
+		c.Json(http.StatusBadRequest, map[string]interface{}{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	c.Json(http.StatusCreated, gin.H{
+	c.Json(http.StatusCreated, map[string]interface{}{
 		"id": todo.ID,
 	})
 }
