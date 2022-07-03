@@ -1,29 +1,22 @@
-package services
+package service
 
 import (
-	"github.com/panutat-p/hexagonal-todo-gin/todo/domain"
-	"github.com/panutat-p/hexagonal-todo-gin/todo/ports"
+	"github.com/panutat-p/hexagonal-todo-gin/core/domain"
+	"github.com/panutat-p/hexagonal-todo-gin/core/port"
 	"net/http"
 )
 
-type Handler struct {
-	store ports.Storer
+type TodoHandler struct {
+	store port.Storer
 }
 
-func NewHandler(store ports.Storer) *Handler {
-	return &Handler{
+func NewTodoHandler(store port.Storer) *TodoHandler {
+	return &TodoHandler{
 		store: store,
 	}
 }
 
-type Context interface {
-	Bind(interface{}) error
-	Json(int, interface{})
-	TransactionId() string
-	Audience() string
-}
-
-func (h *Handler) CreateNewTask(c Context) {
+func (h *TodoHandler) CreateNewTask(c port.Context) {
 	var todo domain.Todo
 	if err := c.Bind(&todo); err != nil {
 		c.Json(http.StatusBadRequest, map[string]interface{}{

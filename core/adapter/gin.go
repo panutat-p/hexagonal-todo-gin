@@ -1,13 +1,15 @@
-package adapters
+package adapter
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/panutat-p/hexagonal-todo-gin/todo/services"
+	"github.com/panutat-p/hexagonal-todo-gin/core/port"
 )
 
-func NewGinHandler(handler func(services.Context)) gin.HandlerFunc {
+// NewGinHandler
+// convert WrappedHandler to GinHandler
+func NewGinHandler(h port.WrappedHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		handler(NewMyContext(c))
+		h(newMyContext(c))
 	}
 }
 
@@ -15,7 +17,7 @@ type MyContext struct {
 	context *gin.Context
 }
 
-func NewMyContext(c *gin.Context) *MyContext {
+func newMyContext(c *gin.Context) *MyContext {
 	return &MyContext{
 		context: c,
 	}

@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/panutat-p/hexagonal-todo-gin/todo/adapters"
-	"github.com/panutat-p/hexagonal-todo-gin/todo/domain"
-	"github.com/panutat-p/hexagonal-todo-gin/todo/services"
+	"github.com/panutat-p/hexagonal-todo-gin/core/adapter"
+	"github.com/panutat-p/hexagonal-todo-gin/core/domain"
+	"github.com/panutat-p/hexagonal-todo-gin/core/service"
+	"github.com/panutat-p/hexagonal-todo-gin/router"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -32,16 +33,17 @@ func main() {
 		panic("Failed to migrate ElephantSQL")
 	}
 
-	todoHandler := services.NewHandler(adapters.NewGormStore(db))
+	todoHandler := service.NewTodoHandler(adapter.NewGormStore(db))
 
-	r := gin.Default()
+	r := router.NewGinRouter() // decoupling technique -> wrap router
+
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "healthy",
 		})
 	})
 
-	r.POST("/todo/new", adapters.NewGinHandler(todoHandler.CreateNewTask)) // convert AdapterHandler to GinHandler
+	r.POST("/todo/new", todoHandler.CreateNewTask) // we can use TodoHandler directly
 
 	err = r.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))) // block
 	if err != nil {

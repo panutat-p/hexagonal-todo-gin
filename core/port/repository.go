@@ -1,7 +1,7 @@
-package ports
+package port
 
 import (
-	"github.com/panutat-p/hexagonal-todo-gin/todo/domain"
+	"github.com/panutat-p/hexagonal-todo-gin/core/domain"
 )
 
 type Storer interface {
