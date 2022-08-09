@@ -11,11 +11,12 @@
 │   └── service
 │       └── todo.go
 ├── main.go
-├── repository (adapter)
+├── repository
 │   └── gorm.go
-└── router (adapter)
-    ├── context.go
-    └── gin.go
+└── router
+    ├── gin_context.go
+    └── gin_engine.go
+
 ```
 
 https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749
