@@ -1,42 +1,41 @@
-package adapter
+package router
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/panutat-p/hexagonal-todo-gin/core/port"
 )
 
-// NewGinHandler
-// convert WrappedHandler to GinHandler
-func NewGinHandler(h port.WrappedHandler) gin.HandlerFunc {
+// NewGinHandler convert Handler to GinHandler
+func NewGinHandler(h port.Handler) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		h(newMyContext(c))
 	}
 }
 
-type MyContext struct {
+type GinContext struct {
 	context *gin.Context
 }
 
-func newMyContext(c *gin.Context) *MyContext {
-	return &MyContext{
+func newMyContext(c *gin.Context) *GinContext {
+	return &GinContext{
 		context: c,
 	}
 }
 
-func (c *MyContext) Bind(v interface{}) error {
+func (c *GinContext) Bind(v interface{}) error {
 	//return c.ShouldBindJSON(v)
 	return c.context.ShouldBindJSON(v)
 }
 
-func (c *MyContext) Json(statusCode int, v interface{}) {
+func (c *GinContext) Json(statusCode int, v interface{}) {
 	c.context.JSON(statusCode, v)
 }
 
-func (c *MyContext) TransactionId() string {
+func (c *GinContext) TransactionId() string {
 	return c.context.Request.Header.Get("Transaction-ID")
 }
 
-func (c *MyContext) Audience() string {
+func (c *GinContext) Audience() string {
 	if aud, ok := c.context.Get("aud"); ok {
 		if s, ok := aud.(string); ok {
 			return s

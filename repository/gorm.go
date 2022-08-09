@@ -1,4 +1,4 @@
-package adapter
+package repository
 
 import (
 	"github.com/panutat-p/hexagonal-todo-gin/core/domain"

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/panutat-p/hexagonal-todo-gin/core/adapter"
 	"github.com/panutat-p/hexagonal-todo-gin/core/domain"
 	"github.com/panutat-p/hexagonal-todo-gin/core/service"
+	"github.com/panutat-p/hexagonal-todo-gin/repository"
 	"github.com/panutat-p/hexagonal-todo-gin/router"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -33,7 +33,7 @@ func main() {
 		panic("Failed to migrate ElephantSQL")
 	}
 
-	todoHandler := service.NewTodoHandler(adapter.NewGormStore(db))
+	todoHandler := service.NewTodoHandler(repository.NewGormStore(db))
 
 	r := router.NewGinRouter() // decoupling technique -> wrap router
 

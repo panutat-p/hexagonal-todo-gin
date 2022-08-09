@@ -1,6 +1,6 @@
 package port
 
-type WrappedHandler func(ctx Context)
+type Handler func(ctx Context)
 
 type Context interface {
 	Bind(interface{}) error
