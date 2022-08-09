@@ -5,18 +5,19 @@ import (
 	"github.com/panutat-p/hexagonal-todo-gin/core/port"
 )
 
-// NewGinHandler convert Handler to GinHandler
+// NewGinHandler convert Handler to real gin handler
 func NewGinHandler(h port.Handler) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		h(newMyContext(c))
+		h(newGinContext(c))
 	}
 }
 
+// GinContext is a wrapper of real gin context
 type GinContext struct {
 	context *gin.Context
 }
 
-func newMyContext(c *gin.Context) *GinContext {
+func newGinContext(c *gin.Context) *GinContext {
 	return &GinContext{
 		context: c,
 	}
