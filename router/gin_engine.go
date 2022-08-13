@@ -21,5 +21,7 @@ func NewGinRouter() *GinRouter {
 // POST
 // func(ctx port.Context) is Handler
 func (r *GinRouter) POST(path string, h port.Handler) {
-	r.Engine.POST(path, NewGinHandler(h))
+	r.Engine.POST(path, func(c *gin.Context) {
+		h(&GinContext{c})
+	})
 }
