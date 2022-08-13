@@ -5,6 +5,6 @@ import (
 )
 
 type Storer interface {
-	Create(todo *domain.Todo) error
-	Query(title string) error
+	CreateItem(todo *domain.Todo) error
+	QueryItems(title string) error
 }

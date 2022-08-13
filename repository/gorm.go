@@ -6,20 +6,18 @@ import (
 )
 
 func NewGormStore(db *gorm.DB) *GormStore {
-	return &GormStore{
-		db: db,
-	}
+	return &GormStore{db}
 }
 
 type GormStore struct {
-	db *gorm.DB
+	*gorm.DB
 }
 
-func (gs GormStore) Create(todo *domain.Todo) error {
-	return gs.db.Create(todo).Error
+func (gs GormStore) CreateItem(todo *domain.Todo) error {
+	return gs.Create(todo).Error
 }
 
-func (gs GormStore) Query(title string) error {
+func (gs GormStore) QueryItems(title string) error {
 	//TODO implement me
 	panic("🟥 Not Implemented Yet")
 }

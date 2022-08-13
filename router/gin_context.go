@@ -14,30 +14,28 @@ func NewGinHandler(h port.Handler) gin.HandlerFunc {
 
 // GinContext is a wrapper of real gin context
 type GinContext struct {
-	context *gin.Context
+	*gin.Context
 }
 
 func newGinContext(c *gin.Context) *GinContext {
-	return &GinContext{
-		context: c,
-	}
+	return &GinContext{c}
 }
 
 func (c *GinContext) Bind(v interface{}) error {
 	//return c.ShouldBindJSON(v)
-	return c.context.ShouldBindJSON(v)
+	return c.ShouldBindJSON(v)
 }
 
 func (c *GinContext) Json(statusCode int, v interface{}) {
-	c.context.JSON(statusCode, v)
+	c.JSON(statusCode, v)
 }
 
 func (c *GinContext) TransactionId() string {
-	return c.context.Request.Header.Get("Transaction-ID")
+	return c.Request.Header.Get("Transaction-ID")
 }
 
 func (c *GinContext) Audience() string {
-	if aud, ok := c.context.Get("aud"); ok {
+	if aud, ok := c.Get("aud"); ok {
 		if s, ok := aud.(string); ok {
 			return s
 		}

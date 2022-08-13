@@ -25,7 +25,7 @@ func (h *TodoHandler) CreateNewTask(c port.Context) {
 		return
 	}
 
-	err := h.store.Create(&todo)
+	err := h.store.CreateItem(&todo)
 	if err != nil {
 		c.Json(http.StatusBadRequest, map[string]interface{}{
 			"error": err.Error(),
